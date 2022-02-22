@@ -34,7 +34,7 @@ class ProductControllers{
          res.render('product/create',{ errors: errors.array(),
             values: req.body });
          }
-      // req.body.img = req.file.path.split('/').slice(7).join('/')
+      req.body.img = req.file.path.split('/').slice(7).join('/')
       cloudinary.uploader
          .upload(req.body.img,{ resource_type: "image", })
          .then(result => console.log(result))

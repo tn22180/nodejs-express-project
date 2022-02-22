@@ -38,7 +38,7 @@ block content
                         td
                             img(src=product.img, alt="product.name" style="height:30px;width:30px;border-radius:50%;")
                         td=product.name
-                        td=product.price
+                        td #{product.price} đ
                         td=product.createdAt
                         td 
                             a(href="/product/"+product._id+"/edit" style="margin-right: 10px;").btn.btn-link Update

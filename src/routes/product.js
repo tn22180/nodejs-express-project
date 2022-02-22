@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
            
         },
         filename: (req, file, cb) => {
-            cb(null , file.originalname); // mặc định sẽ save name của hình ảnh
-            // là name gốc, chúng ta có thể rename nó.  
+            cb(null,Date.now() + path.extname(file.originalname))
+        
         }
     })
     const upload = multer({storage:storage});

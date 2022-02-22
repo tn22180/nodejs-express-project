@@ -1,7 +1,7 @@
 const Product = require('../models/Product')
 const path = require('path')
 const { body, validationResult } = require('express-validator');
-const cloudinary = require('cloudinary').v2
+const cloudinary = require('cloudinary')
 console.log(cloudinary.config({
    cloud_name: 'cutuan20', 
   api_key: '584916545415636', 

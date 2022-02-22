@@ -2,11 +2,14 @@ const Product = require('../models/Product')
 const path = require('path')
 const { body, validationResult } = require('express-validator');
 const cloudinary = require('cloudinary')
-console.log(cloudinary.config({
+cloudinary.config({
    cloud_name: 'cutuan20', 
   api_key: '584916545415636', 
-  api_secret: 'Xn2MBbu23Id1zBsf4GFi1SNkSmQ'
-}).cloud_name)
+  api_secret: 'Xn2MBbu23Id1zBsf4GFi1SNkSmQ',
+  shorten: true,
+  secure: true,
+  ssl_detected: true,
+})
 class ProductControllers{
     // [GET] /product/:slug
    show(req, res, next){
@@ -34,15 +37,23 @@ class ProductControllers{
          res.render('product/create',{ errors: errors.array(),
             values: req.body });
          }
-      req.body.img = req.file.path.split('/').slice(7).join('/')
+      // req.body.img = req.file.path.split('/').slice(7).join('/')
       cloudinary.uploader
-         .upload(req.body.img,{ resource_type: "image", })
-         .then(result => console.log(result))
-         .catch(err => console.log(err))
-      const product = new Product(req.body)
-       product.save()
-            .then((product) => res.redirect('/product/'+product.slug))
-            .catch(next)
+         .upload(req.file.path,{ resource_type: "image", })
+         .then(result => 
+            {  
+               req.body.img = result.url
+               const product = new Product(req.body)
+                  product.save()
+                        .then((product) => res.redirect('/product/'+product.slug))
+                        .catch(next)
+            })
+         .catch(next)
+      
+      // const product = new Product(req.body)
+      //  product.save()
+      //       .then((product) => res.redirect('/product/'+product.slug))
+      //       .catch(next)
    }
 //    [GET]/product   
    main(req, res, next)

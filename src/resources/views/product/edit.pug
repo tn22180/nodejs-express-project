@@ -1,0 +1,17 @@
+extends ../layout/main.pug
+block content
+    .container.mt-5
+        form(method='POST' action='/product/'+product._id+'?_method=PUT' enctype='multipart/form-data')
+            .mb-3
+                label.form-label(for='name') Name Product
+                input#name.form-control(type='text' name='name' value=product.name)
+            .mb-3
+                label.form-label(for='price') Price Product
+                input#price.form-control(type='text' name='price' value=product.price)
+            .mb-3
+                label.form-label(for='description') Description
+                input#description.form-control(type='text' name='description' value=product.description)
+            .mb-3
+                label.form-label(for='img') img
+                input#img.form-control(type='file' name='img' value=product.img)
+            button.btn.btn-primary(type='submit') Submit

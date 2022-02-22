@@ -1,0 +1,113 @@
+extends ../layout/main.pug
+block content 
+    .container
+        form(method='POST' action='/product/handle-form-action').mt-5   
+            table.table
+                div 
+                    h3 Deleted products 
+                    a(href="/product")  Back
+                div.d-flex
+                        .form-check
+                            input#flexCheckDefault.form-check-input.form-check-all(type='checkbox' value='')
+                            label.form-check-label(for='flexCheckDefault')
+                                | Check All 
+                        select.form-select(aria-label='Default select example' name = 'action' required)
+                            option(selected='' value='') Open this select option
+                            option(value='restore') Restore
+                            option(value='forceDelete') Force Delete
+                        button.btn.btn-primary.check-all-submit(disabled ) Submit
+                thead
+                    tr
+                    th
+                    th(scope='col') #
+                    th(scope='col') Name Product
+                    th(scope='col') Price
+                    th(scope='col') Created At
+                    td
+                each product,index in  products  
+                    tbody
+                        tr
+                        th
+                            .form-check
+                                input#flexCheckDefault.form-check-input(type='checkbox' name='productId[]' value=product._id)
+                        th(scope='row')= (index+1)
+                        td=product.name
+                        td=product.price
+                        td=product.createdAt
+                        td 
+                            a(href="" style="margin-right: 10px;" data-id=product._id).btn.btn-link.btn-restore Restore
+                            a(href="" data-bs-toggle="modal" data-id=product._id data-bs-target="#deleteModal") Force Delete
+                            #deleteModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+                                .modal-dialog
+                                    .modal-content
+                                        .modal-header
+                                            h5#exampleModalLabel.modal-title Delete Item?
+                                            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                                        .modal-body
+                                            | Do you want to delete it?
+                                        .modal-footer
+                                            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                                            button.btn.btn-danger#btn-delete(type='button') Delete
+                else 
+                    tr 
+                        td(colspan = '5').text-center  Bin is empty .
+                            a(href="/product") List Product
+                            
+        form(method="POST" name='form-delete')
+        form(method="POST" name='form-restore')
+        script.
+                var deleteModal = document.getElementById('deleteModal')
+                var productId;
+                var btnDelete = document.getElementById('btn-delete')
+                var formDelete = document.querySelector('form[name=form-delete]')
+                var formRestore = document.querySelector('form[name=form-restore]')
+                var btnRestores = document.querySelectorAll('.btn-restore')
+                var formCheckAll = document.querySelector('.form-check-all')
+                var formCheckElements = document.querySelectorAll('input[name="productId[]"]')
+                var checkAllSubmitBtn = document.querySelector('.check-all-submit')
+                deleteModal.addEventListener('show.bs.modal', function (event) {
+                
+                    var button = event.relatedTarget
+                    
+                    productId = button.getAttribute('data-id')
+                })
+                btnDelete.onclick = function()
+                    {
+                    formDelete.action='/product/'+productId+'/force?_method=DELETE'
+                    formDelete.submit()
+                    }
+                btnRestores.forEach(btnRestore => {
+                    btnRestore.onclick = function(e)
+                    {
+                        e.preventDefault()
+                        var productId = this.getAttribute('data-id')
+                        formRestore.action='/product/'+productId+'/restore?_method=PATCH'
+                        formRestore.submit()
+                    }
+
+                })
+                formCheckAll.onchange = function(e)
+                    {
+                        formCheckElements.forEach((formCheckElement) => {
+                            formCheckElement.checked = formCheckAll.checked
+                            renderCheckAllSubmitBtn()
+                        })
+                    }
+                    formCheckElements.forEach((formCheckElement) => {
+                        formCheckElement.onchange = () => {
+                            var isCheckedAll = formCheckElements.length === document.querySelectorAll('input[name="productId[]"]:checked').length
+                            formCheckAll.checked = isCheckedAll;
+                            renderCheckAllSubmitBtn()
+                        }
+                    })
+                    function renderCheckAllSubmitBtn() {
+                        var checkedCount = document.querySelectorAll('input[name="productId[]"]:checked').length;
+                            if(checkedCount){
+                                checkAllSubmitBtn.removeAttribute('disabled')
+                            }
+                            else{
+                                    checkAllSubmitBtn.setAttribute('disabled',true)
+                            }  
+                    }
+        
+                                                            

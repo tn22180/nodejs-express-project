@@ -1,0 +1,13 @@
+extends ../layout/main.pug
+block content
+    .container.mt-5
+            ul.list-group.list-group-flush.text-center
+                li.list-group-item
+                        img(src=user.img, alt=user.name style="width: 300px;height: 300px;")
+                li.list-group-item
+                    h1=user.name
+                li.list-group-item=user.email
+                li.list-group-item=user.phone
+                
+            
+

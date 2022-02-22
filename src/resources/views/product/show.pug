@@ -1,0 +1,13 @@
+extends ../layout/main.pug
+block content
+   .container.mt-5
+        each proInfo in product
+            .row.background-primary
+                .col-sm-3.mt-5.mr-5
+                    .btn.btn-primary Buy Now 
+                .col-sm-9.text-center.mt-5.ml-5
+                    h1= proInfo.name
+                    img(src='/'+proInfo.img, alt=proInfo.name)
+                    p.cart-price=proInfo.price 
+                    p=proInfo.description
+                

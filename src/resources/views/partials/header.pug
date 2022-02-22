@@ -1,0 +1,39 @@
+nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  .container-fluid
+    a.navbar-brand(href='/') LOGO
+    button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse.ms-auto
+      ul.navbar-nav.me-auto.mb-2.mb-lg-0
+        li.nav-item.dropdown
+          a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+            | Product
+          ul.dropdown-menu(aria-labelledby='navbarDropdown')
+            li
+              a.dropdown-item(href='/product') List Product
+            li
+              a.dropdown-item(href='/product/create') Create
+        li.nav-item
+              a.nav-link Cart(#{totalProducts})
+
+        li.nav-item.dropdown
+            if user
+              a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                img(src=user.img, alt=user.name style="width:30px;height:30px;border-radius:50%;")
+                =user.name 
+              ul.dropdown-menu(aria-labelledby='navbarDropdown')
+                li
+                  a.dropdown-item(href='/authentication/logout') Logout
+              
+            else
+              a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                |User 
+            ul.dropdown-menu(aria-labelledby='navbarDropdown')
+              li
+                a.dropdown-item(href='/authentication/login') Login
+              li
+                a.dropdown-item(href='/user/register') Register
+              
+      form.d-flex(method='GET' action='/product/search').ms-auto
+        input.form-control(type='search' name='q' placeholder='Search' aria-label='Search' value=q)
+        button.btn.btn-outline-success(type='submit') Search

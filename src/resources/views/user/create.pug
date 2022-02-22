@@ -1,0 +1,23 @@
+extends ../layout/main.pug
+block content
+    .container.mt-5
+        if errors
+            each error in errors
+                h2(style="font-size: 14px; color: red;").alert.alert-danger=error.msg
+        form(method='POST' action='/user/create')
+                .mb-3
+                    label.form-label(for='email') Email
+                    input#email.form-control(type='email' name='email' value=values ? values.email : '')
+                .mb-3
+                    label.form-label(for='password') Password
+                    input#password.form-control(type='password' name='password' value=values ? values.password : '')
+                .mb-3
+                    label.form-label(for='name') User Name
+                    input#name.form-control(type='text' name='name' value=values ? values.name : '')
+                .mb-3
+                    label.form-label(for='phone') Phone
+                    input#phone.form-control(type='text' name='phone' value=values ? values.phone : '')
+                .mb-3
+                    label.form-label(for='img') Img
+                    input#img.form-control(type='text' name='img' value=values ? values.img : '')
+                button.btn.btn-primary(type='submit') Create

@@ -1,0 +1,20 @@
+extends ../layout/main.pug
+block content
+    .container.mt-5
+        if errors
+            each error in errors
+                h2(style="font-size: 14px; color: red;").alert.alert-danger=error.msg
+        form(method='POST' action='/product/store' enctype='multipart/form-data' )
+                .mb-3
+                    label.form-label(for='name') Name Product
+                    input#name.form-control(type='text' name='name' value=values ? values.name : '')
+                .mb-3
+                    label.form-label(for='price') Price Product
+                    input#price.form-control(type='text' name='price' value=values ? values.price : '')
+                .mb-3
+                    label.form-label(for='description') Description
+                    input#description.form-control(type='text' name='description' value=values ? values.description : '')
+                .mb-3
+                    label.form-label(for='img') img
+                    input#img.form-control(type='file' name='img')
+                button.btn.btn-primary(type='submit') Submit

@@ -1,0 +1,129 @@
+
+extends ../layout/main.pug
+include ../mixins/sortable
+block content   
+    .container 
+        form(method='POST' action='/product/handle-form-action').mt-5   
+            table.table
+                div 
+                    h3 My Products 
+                    a(href="/product/trash") Bin(#{countDeleted}) 
+                div.d-flex
+                    .form-check
+                        input#flexCheckDefault.form-check-input.form-check-all(type='checkbox' value='')
+                        label.form-check-label(for='flexCheckDefault')
+                            | Check All 
+                    select.form-select(aria-label='Default select example' name = 'action' required)
+                        option(selected='' value='') Open this select option
+                        option(value='delete') Delete
+                    button.btn.btn-primary.check-all-submit(disabled ) Submit
+                thead
+                    tr
+                    th
+                    th(scope='col') #
+                    th Image
+                    th(scope='col') Name Product
+                         +sortable('name', _sort)
+                    th(scope='col') Price
+                        +sortable('price', _sort)
+                    th(scope='col') Created At
+                    td
+                each product,index in  products  
+                    tbody
+                        tr
+                        th
+                            .form-check
+                                input#flexCheckDefault.form-check-input(type='checkbox' name='productId[]' value=product._id)
+                        th(scope='row')= (index+1)
+                        td
+                            img(src=product.img, alt="product.name" style="height:30px;width:30px;border-radius:50%;")
+                        td=product.name
+                        td=product.price
+                        td=product.createdAt
+                        td 
+                            a(href="/product/"+product._id+"/edit" style="margin-right: 10px;").btn.btn-link Update
+                            a(href="" data-bs-toggle="modal" data-id=product._id data-bs-target="#deleteModal") Delete
+                            #deleteModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+                                .modal-dialog
+                                    .modal-content
+                                        .modal-header
+                                            h5#exampleModalLabel.modal-title Delete Item?
+                                            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                                        .modal-body
+                                            | Do you want to delete it?
+                                        .modal-footer
+                                            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                                            button.btn.btn-danger#btn-delete(type='button') Delete
+
+                else 
+                    tr 
+                        td(colspan = '5').text-center  Don't have product in here .
+                            a(href="/product/create") Create Product
+                nav.mt-5(aria-label='Page navigation example')
+                    ul.pagination
+                            -if(currentPage<=1)
+                                li.page-item.disabled
+                                    a.page-link(href='/product?page='+(1) aria-label='Previous')
+                                        span(aria-hidden='true') &laquo;
+                            -else
+                                li.page-item
+                                    a.page-link(href='/product?page='+(currentPage-1) aria-label='Previous')
+                                        span(aria-hidden='true') &laquo;
+                            - for(i=1;i<=Math.ceil(count/limit);i++)
+                                li.page-item
+                                    a.page-link(href='/product?page='+i)=i
+                            -if(currentPage >= Math.ceil(count/limit))
+                                li.page-item.disabled
+                                    a.page-link(href='/product?page='+(Math.ceil(count/limit)) aria-label='Next')
+                                        span(aria-hidden='true') &raquo;
+                            -else
+                                li.page-item
+                                    a.page-link(href='/product?page='+(currentPage+1) aria-label='Next')
+                                        span(aria-hidden='true') &raquo;
+
+                            
+        form(method="POST" name='form-delete')
+        script.
+                var deleteModal = document.getElementById('deleteModal')
+                var productId;
+                var btnDelete = document.getElementById('btn-delete')
+                var formDelete = document.querySelector('form[name=form-delete]')
+                var formCheckAll = document.querySelector('.form-check-all')
+                var formCheckElements = document.querySelectorAll('input[name="productId[]"]')
+                var checkAllSubmitBtn = document.querySelector('.check-all-submit')
+                deleteModal.addEventListener('show.bs.modal', function (event) {
+                
+                    var button = event.relatedTarget
+                    
+                    productId = button.getAttribute('data-id')
+                })
+                btnDelete.onclick = function()
+                    {
+                    formDelete.action='/product/'+productId+'?_method=DELETE'
+                    formDelete.submit()
+                    }
+                formCheckAll.onchange = function(e)
+                {
+                    formCheckElements.forEach((formCheckElement) => {
+                        formCheckElement.checked = formCheckAll.checked
+                        renderCheckAllSubmitBtn()
+                    })
+                }
+                formCheckElements.forEach((formCheckElement) => {
+                    formCheckElement.onchange = () => {
+                        var isCheckedAll = formCheckElements.length === document.querySelectorAll('input[name="productId[]"]:checked').length
+                        formCheckAll.checked = isCheckedAll;
+                        renderCheckAllSubmitBtn()
+                    }
+                })
+                function renderCheckAllSubmitBtn() {
+                    var checkedCount = document.querySelectorAll('input[name="productId[]"]:checked').length;
+                        if(checkedCount){
+                            checkAllSubmitBtn.removeAttribute('disabled')
+                        }
+                        else{
+                                checkAllSubmitBtn.setAttribute('disabled',true)
+                        }  
+                }
+        
+                                                            

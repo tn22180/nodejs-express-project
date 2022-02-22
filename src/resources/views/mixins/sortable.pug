@@ -1,0 +1,8 @@
+mixin sortable(field, sort)
+    - const sortType = field === sort.column ? sort.type : 'default'
+    - const icons = { default: 'bi bi-arrow-down-up', asc: 'bi bi-sort-down', desc: 'bi bi-sort-up'}
+    - const types = { default: 'desc', asc: 'desc', desc: 'asc'}
+    - const icon = icons[sortType]
+    - const type = types[sortType]
+    a(href=`?_sort&column=${field}&type=${type}`) 
+        span(class = `${icon}`)

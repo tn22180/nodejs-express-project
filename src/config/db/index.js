@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 async function connect(){
     try{
-        await mongoose.connect('mongodb://127.0.0.1:27017/product-management', {
+        await mongoose.connect('mongodb+srv://tn22180:vaituan11@cluster0.dhr8u.mongodb.net/product-nodejs?retryWrites=true&w=majority', {
             // userNewUrlParser: true,
             serverSelectionTimeoutMS: 5000,
             autoIndex: false, // Don't build indexes
